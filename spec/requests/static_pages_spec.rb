@@ -35,4 +35,16 @@ RSpec.describe 'StaticPages', type: :request do
       expect(response.body).to include "About | #{base_title}"
     end
   end
+
+  describe '#contact' do
+    it '正常にレスポンスを返すこと' do
+     get static_pages_contact_path
+      expect(response).to have_http_status :ok
+    end
+    it 'Contact | Ruby on Rails Tutorial Sample Appが含まれること' do
+      get static_pages_contact_path
+      expect(response.body).to include "Contact | #{base_title}"
+    end
+  end
+
 end
