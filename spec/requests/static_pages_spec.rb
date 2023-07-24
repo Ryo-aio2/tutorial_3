@@ -3,6 +3,13 @@ require 'rails_helper'
 RSpec.describe 'StaticPages', type: :request do
   let(:base_title) {'Ruby on Rails Tutorial Sample App'}
 
+  describe 'root' do
+    it '正常にレスポンスを返すこと' do
+      get root_path
+      expect(response).to have_http_status :ok
+    end
+  end
+
   describe '#home' do
     it '正常にレスポンスを返すこと' do
       get static_pages_home_path
