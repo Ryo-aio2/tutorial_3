@@ -11,7 +11,9 @@ RSpec.describe 'Users', type: :request do
       get signup_path
       expect(response.body).to include full_title('Sign up')
     end
+  end
 
+  describe 'POST /users #create' do
     context '有効な値の場合' do
       let(:user_params) do
         { user: { name: 'Example User',
@@ -36,16 +38,16 @@ RSpec.describe 'Users', type: :request do
         expect(flash).to be_any
       end
     end
-  end
 
-  describe 'POST /users #create' do
-    it '無効な値だと登録されないこと' do
-      expect do
-        post users_path, params: { user: { name: '',
-                                           email: 'user@invlid',
-                                           password: 'foo',
-                                           password_confimation: 'bar' } }
-      end.to_not change(User, :count)
+    context '無効な値の場合' do
+      it '無効な値だと登録されないこと' do
+        expect do
+          post users_path, params: { user: { name: '',
+                                             email: 'user@invlid',
+                                             password: 'foo',
+                                             password_confimation: 'bar' } }
+        end.to_not change(User, :count)
+      end
     end
   end
 end
