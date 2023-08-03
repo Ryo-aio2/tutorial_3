@@ -37,6 +37,11 @@ RSpec.describe 'Users', type: :request do
         post users_path, params: user_params
         expect(flash).to be_any
       end
+
+      it 'ログイン状態であること' do
+        post users_path, params: user_params
+        expect(logged_in?).to be_truthy
+      end
     end
 
     context '無効な値の場合' do
@@ -48,6 +53,17 @@ RSpec.describe 'Users', type: :request do
                                              password_confimation: 'bar' } }
         end.to_not change(User, :count)
       end
+    end
+  end
+
+  describe 'DELETE /logout' do
+    it 'ログアウトできること' do
+      user = FactoryBot.create(:user)
+      post login_path, params: { session: { email: user.email,
+                                            password: user.password } }
+      expect(logged_in?).to be_truthy
+      delete logout_path
+      expect(logged_in?).to_not be_truthy
     end
   end
 end
