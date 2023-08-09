@@ -27,4 +27,6 @@ Metrics/AbcSize:
 
 ParenthesesAroundCondition:
   AllowSafeAssignment: false
-  
+
+AssignmentInCondition:
+  AllowSafeAssignment: false
