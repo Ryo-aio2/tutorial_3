@@ -64,6 +64,31 @@ RSpec.describe 'Users', type: :request do
       expect(response.body).to include full_title('Edit user')
     end
 
+    context '有効な値の場合' do
+      before do
+        @name = 'Foo Bar'
+        @email = 'foo@bar.com'
+        patch user_path(user), params: { user: { name: @name,
+                                                 email: @email,
+                                                 password: '',
+                                                 password_confirmation: '' } }
+      end
+
+      it '更新できること' do
+        user.reload
+        expect(user.name).to eq @name
+        expect(user.email).to eq @email
+      end
+
+      it 'Users#showにリダイレクトすること' do
+        expect(response).to redirect_to user
+      end
+
+      it 'flashが表示されていること' do
+        expect(flash).to be_any
+      end
+    end
+
     context '無効な値の場合' do
       it '更新できないこと' do
         patch user_path(user), params: { user: { name: '',
