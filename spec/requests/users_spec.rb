@@ -13,6 +13,13 @@ RSpec.describe 'Users', type: :request do
     end
   end
 
+  describe 'GET /users' do
+    it 'ログインユーザでなければログインページにリダイレクトすること' do
+      get users_path
+      expect(response).to redirect_to login_path
+    end
+  end
+
   describe 'POST /users #create' do
     context '有効な値の場合' do
       let(:user_params) do
