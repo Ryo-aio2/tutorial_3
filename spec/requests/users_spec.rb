@@ -57,15 +57,17 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'PATCH /users' do
-    let!(:user) { FactoryBot.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     it 'タイトルがEdit user | Ruby on Rails Tutorial Sample Appであること' do
+      log_in user
       get edit_user_path(user)
       expect(response.body).to include full_title('Edit user')
     end
 
     context '有効な値の場合' do
       before do
+        log_in user
         @name = 'Foo Bar'
         @email = 'foo@bar.com'
         patch user_path(user), params: { user: { name: @name,
@@ -90,11 +92,15 @@ RSpec.describe 'Users', type: :request do
     end
 
     context '無効な値の場合' do
-      it '更新できないこと' do
+      before do
+        log_in user
         patch user_path(user), params: { user: { name: '',
                                                  email: 'foo@invlid',
                                                  password: 'foo',
                                                  password_confirmation: 'bar' } }
+      end
+
+      it '更新できないこと' do
         user.reload
         expect(user.name).to_not eq ''
         expect(user.email).to_not eq ''
@@ -103,19 +109,10 @@ RSpec.describe 'Users', type: :request do
       end
 
       it '更新アクション後にeditのページが表示されていること' do
-        get edit_user_path(user)
-        patch user_path(user), params: { user: { name: '',
-                                                 email: 'foo@invlid',
-                                                 password: 'foo',
-                                                 password_confirmation: 'bar' } }
         expect(response.body).to include full_title('Edit user')
       end
 
       it 'The form contains 4 errors.と表示されていること' do
-        patch user_path(user), params: { user: { name: '',
-                                                 email: 'foo@invlid',
-                                                 password: 'foo',
-                                                 password_confirmation: 'bar' } }
         expect(response.body).to include 'The form contains 4 errors.'
       end
     end
