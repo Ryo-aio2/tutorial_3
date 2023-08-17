@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2023_08_17_015425) do
     t.datetime "updated_at", null: false
     t.string "password_digest", null: false
     t.string "remember_digest"
-    t.boolean "admin", default: false
+    t.boolean "admin", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
