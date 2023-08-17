@@ -126,7 +126,7 @@ RSpec.describe 'Users', type: :request do
     end
 
     context '別のユーザの場合' do
-      let(:other_user) { FactoryBot.create(:user, name: 'Sterling Archer', email: 'duchess@example.gov') }
+      let(:other_user) { FactoryBot.create(:user, :other_user) }
 
       it 'flashが空であること' do
         log_in user
@@ -230,7 +230,7 @@ RSpec.describe 'Users', type: :request do
     end
 
     context '別のユーザの場合' do
-      let(:other_user) { FactoryBot.create(:user, name: 'Sterling Archer', email: 'duchess@example.gov') }
+      let(:other_user) { FactoryBot.create(:user, :other_user) }
 
       before do
         log_in user
@@ -249,8 +249,8 @@ RSpec.describe 'Users', type: :request do
   end
 
   describe 'DELETE /users/{id}' do
-    let!(:user) { FactoryBot.create(:user, admin: true) }
-    let!(:other_user) { FactoryBot.create(:user, name: 'Sterling Archer', email: 'duchess@example.gov') }
+    let!(:user) { FactoryBot.create(:user, :admin_user) }
+    let!(:other_user) { FactoryBot.create(:user, :other_user) }
 
     context '未ログインの場合' do
       it '削除できないこと' do

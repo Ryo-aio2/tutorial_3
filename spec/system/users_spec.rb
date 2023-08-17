@@ -20,8 +20,8 @@ RSpec.describe 'Users', type: :system do
   end
 
   describe '#index' do
-    let!(:admin) { FactoryBot.create(:user, admin: true) }
-    let!(:not_admin) { FactoryBot.create(:user, name: 'Sterling Archer', email: 'duchess@example.gov') }
+    let!(:admin) { FactoryBot.create(:user, :admin_user) }
+    let!(:not_admin) { FactoryBot.create(:user, :other_user) }
 
     it 'adminユーザならdeleteリンクが表示されること' do
       log_in admin
