@@ -112,6 +112,17 @@ RSpec.describe 'Users', type: :request do
         log_in user
         expect(response).to redirect_to edit_user_path(user)
       end
+
+      it '2回目以降はデフォルトのURLにリダイレクトされること' do
+        get edit_user_path(user)
+        log_in user
+        expect(response).to redirect_to edit_user_path(user)
+        log_out
+
+        # ２回目のログイン
+        log_in user
+        expect(response).to redirect_to user
+      end
     end
 
     context '別のユーザの場合' do
