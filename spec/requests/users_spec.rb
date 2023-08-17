@@ -247,4 +247,46 @@ RSpec.describe 'Users', type: :request do
       end
     end
   end
+
+  describe 'DELETE /users/{id}' do
+    let!(:user) { FactoryBot.create(:user, admin: true) }
+    let!(:other_user) { FactoryBot.create(:user, name: 'Sterling Archer', email: 'duchess@example.gov') }
+
+    context '未ログインの場合' do
+      it '削除できないこと' do
+        expect do
+          delete user_path(user)
+        end.to_not change(User, :count)
+      end
+
+      it 'ログインページにリダイレクトすること' do
+        delete user_path(user)
+        expect(response).to redirect_to login_path
+      end
+    end
+
+    context 'adminユーザでない場合' do
+      it '削除できないこと' do
+        log_in other_user
+        expect do
+          delete user_path(user)
+        end.to_not change(User, :count)
+      end
+
+      it 'rootにリダイレクトすること' do
+        log_in other_user
+        delete user_path(user)
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'adminユーザでログイン済みの場合' do
+      it '削除できること' do
+        log_in user
+        expect do
+          delete user_path(other_user)
+        end.to change(User, :count).by(-1)
+      end
+    end
+  end
 end

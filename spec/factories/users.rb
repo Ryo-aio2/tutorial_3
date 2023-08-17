@@ -4,6 +4,7 @@ FactoryBot.define do
     email { 'michael@example.com' }
     password { 'password' }
     password_confirmation { 'password' }
+    admin { false }
   end
 
   factory :continuous_users, class: User do
