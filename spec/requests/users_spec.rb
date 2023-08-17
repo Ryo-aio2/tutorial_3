@@ -145,6 +145,18 @@ RSpec.describe 'Users', type: :request do
   describe 'PATCH /users' do
     let(:user) { FactoryBot.create(:user) }
 
+    it 'admin属性は更新できないこと' do
+      # userはこの後adminユーザになるので違うユーザにしておく
+      log_in user = FactoryBot.create(:user, name: 'Sterling Archer', email: 'duchess@example.gov')
+      expect(user).to_not be_admin
+
+      patch user_path(user), params: { user: { password: 'password',
+                                               password_confirmation: 'password',
+                                               admin: true } }
+      user.reload
+      expect(user).to_not be_admin
+    end
+
     it 'タイトルがEdit user | Ruby on Rails Tutorial Sample Appであること' do
       log_in user
       get edit_user_path(user)
