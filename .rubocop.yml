@@ -25,6 +25,10 @@ Metrics/AbcSize:
   # a Float.
   Max: 25
 
+MethodLength:
+  CountComments: false  # count full line comments?
+  Max: 15
+
 ParenthesesAroundCondition:
   AllowSafeAssignment: false
 
