@@ -5,6 +5,8 @@ FactoryBot.define do
     password { 'password' }
     password_confirmation { 'password' }
     admin { false }
+    activated { true }
+    activated_at { '<%= Time.zone.now %>' }
 
     trait :admin_user do
       admin { true }
