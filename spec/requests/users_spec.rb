@@ -52,6 +52,11 @@ RSpec.describe 'Users', type: :request do
                   password: 'password',
                   password_confirmation: 'password' } }
       end
+
+      before do
+        ActionMailer::Base.deliveries.clear
+      end
+
       it '登録されること' do
         expect do
           post users_path, params: user_params
@@ -73,6 +78,16 @@ RSpec.describe 'Users', type: :request do
       #   post users_path, params: user_params
       #   expect(logged_in?).to be(true)
       # end
+
+      it 'メールが一件存在すること' do
+        post users_path, params: user_params
+        expect(ActionMailer::Base.deliveries.size).to eq 1
+      end
+
+      it '登録時点ではactivateされていないこと' do
+        post users_path, params: user_params
+        expect(User.last).to_not be_activated
+      end
     end
 
     context '無効な値の場合' do
