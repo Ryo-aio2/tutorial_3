@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                :bigint           not null, primary key
+#  activated         :boolean          default(FALSE)
+#  activated_at      :datetime
+#  activation_digest :string
+#  admin             :boolean          default(FALSE), not null
+#  email             :string           not null
+#  name              :string           not null
+#  password_digest   :string           not null
+#  remember_digest   :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#
+# Indexes
+#
+#  index_users_on_email  (email) UNIQUE
+#
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -74,7 +94,7 @@ RSpec.describe User, type: :model do
 
   describe '#authenticated?' do
     it 'digestがnilならfalseを返すこと' do
-      expect(user.authenticated?('')).to be(false)
+      expect(user.authenticated?(:remember, '')).to be(false)
     end
   end
 end

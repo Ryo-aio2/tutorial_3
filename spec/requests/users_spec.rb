@@ -18,6 +18,14 @@ RSpec.describe 'Users', type: :request do
       get users_path
       expect(response).to redirect_to login_path
     end
+
+    it 'activateされていないユーザは表示されないこと' do
+      user = FactoryBot.create(:user, email: 'test1@t.t')
+      not_activated_user = FactoryBot.create(:user, name: 'aaaaaa', email: 'test2@t.t', activated: false)
+      log_in user
+      get users_path
+      expect(response.body).to_not include not_activated_user.name
+    end
   end
 
   describe 'index' do
@@ -52,16 +60,15 @@ RSpec.describe 'Users', type: :request do
                   password: 'password',
                   password_confirmation: 'password' } }
       end
+
+      before do
+        ActionMailer::Base.deliveries.clear
+      end
+
       it '登録されること' do
         expect do
           post users_path, params: user_params
         end.to change(User, :count).by 1
-      end
-
-      it 'users/showにリダイレクトされること' do
-        post users_path, params: user_params
-        user = User.last
-        expect(response).to redirect_to user
       end
 
       it 'flashが表示されること' do
@@ -69,9 +76,14 @@ RSpec.describe 'Users', type: :request do
         expect(flash).to be_any
       end
 
-      it 'ログイン状態であること' do
+      it 'メールが一件存在すること' do
         post users_path, params: user_params
-        expect(logged_in?).to be(true)
+        expect(ActionMailer::Base.deliveries.size).to eq 1
+      end
+
+      it '登録時点ではactivateされていないこと' do
+        post users_path, params: user_params
+        expect(User.last).to_not be_activated
       end
     end
 
@@ -84,6 +96,17 @@ RSpec.describe 'Users', type: :request do
                                              password_confimation: 'bar' } }
         end.to_not change(User, :count)
       end
+    end
+  end
+
+  describe 'get /users/{id}' do
+    it '有効化されていないユーザの場合はrootにリダイレクトすること' do
+      user = FactoryBot.create(:user, email: 'test1@t.t')
+      not_activated_user = FactoryBot.create(:user, name: 'aaaaaa', email: 'test2@t.t', activated: false)
+
+      log_in user
+      get user_path(not_activated_user)
+      expect(response).to redirect_to root_path
     end
   end
 
