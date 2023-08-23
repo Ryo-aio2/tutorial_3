@@ -19,7 +19,7 @@ RSpec.describe 'AccountActivations', type: :request do
 
       it 'ログイン状態になること' do
         get edit_account_activation_path(@user.activation_token, email: @user.email)
-        expect(logged_in?).to be_truthy
+        expect(logged_in?).to be(true)
       end
 
       it 'ユーザ詳細ページにリダイレクトすること' do
@@ -31,12 +31,12 @@ RSpec.describe 'AccountActivations', type: :request do
     context 'トークンとemailが無効な場合' do
       it '有効化トークンが不正ならログイン状態にならないこと' do
         get edit_account_activation_path('invalid token', email: @user.email)
-        expect(logged_in?).to be_falsey
+        expect(logged_in?).to be(false)
       end
 
       it 'メールアドレスが不正ならログイン状態にならないこと' do
         get edit_account_activation_path(@user.activation_token, email: 'wrong')
-        expect(logged_in?).to be_falsey
+        expect(logged_in?).to be(false)
       end
     end
   end
