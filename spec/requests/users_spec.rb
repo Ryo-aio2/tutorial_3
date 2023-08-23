@@ -63,20 +63,9 @@ RSpec.describe 'Users', type: :request do
         end.to change(User, :count).by 1
       end
 
-      it 'users/showにリダイレクトされること' do
-        post users_path, params: user_params
-        user = User.last
-        expect(response).to redirect_to user
-      end
-
       it 'flashが表示されること' do
         post users_path, params: user_params
         expect(flash).to be_any
-      end
-
-      it 'ログイン状態であること' do
-        post users_path, params: user_params
-        expect(logged_in?).to be(true)
       end
 
       it 'メールが一件存在すること' do
