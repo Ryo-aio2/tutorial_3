@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_action :admin_user,     except: %i[index show new create edit update]
 
   def index
-    @users = User.where(activated: true).paginate(page: params[:page])
+    @users = User.activated.paginate(page: params[:page])
   end
 
   def show
