@@ -18,6 +18,14 @@ RSpec.describe 'Users', type: :request do
       get users_path
       expect(response).to redirect_to login_path
     end
+
+    it 'activateされていないユーザは表示されないこと' do
+      user = FactoryBot.create(:user, email: 'test1@t.t')
+      not_activated_user = FactoryBot.create(:user, name: 'aaaaaa', email: 'test2@t.t', activated: false)
+      log_in user
+      get users_path
+      expect(response.body).to_not include not_activated_user.name
+    end
   end
 
   describe 'index' do
@@ -88,6 +96,17 @@ RSpec.describe 'Users', type: :request do
                                              password_confimation: 'bar' } }
         end.to_not change(User, :count)
       end
+    end
+  end
+
+  describe 'get /users/{id}' do
+    it '有効化されていないユーザの場合はrootにリダイレクトすること' do
+      user = FactoryBot.create(:user, email: 'test1@t.t')
+      not_activated_user = FactoryBot.create(:user, name: 'aaaaaa', email: 'test2@t.t', activated: false)
+
+      log_in user
+      get user_path(not_activated_user)
+      expect(response).to redirect_to root_path
     end
   end
 
