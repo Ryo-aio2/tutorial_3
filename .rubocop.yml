@@ -19,6 +19,7 @@ Style/Documentation:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*
+    - lib/tasks/auto_annotate_models.rake
 
 Metrics/AbcSize:
   # The ABC size is a calculated magnitude, so this number can be a Fixnum or

@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                :bigint           not null, primary key
+#  activated         :boolean          default(FALSE)
+#  activated_at      :datetime
+#  activation_digest :string
+#  admin             :boolean          default(FALSE), not null
+#  email             :string           not null
+#  name              :string           not null
+#  password_digest   :string           not null
+#  remember_digest   :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#
+# Indexes
+#
+#  index_users_on_email  (email) UNIQUE
+#
 class User < ApplicationRecord
   attr_accessor :remember_token, :activation_token
 
@@ -14,6 +34,9 @@ class User < ApplicationRecord
 
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+
+  scope :activated, -> { where(activated: true) }
+  scope :admin, -> { where(admin: true) }
 
   # 渡された文字列のハッシュ値を返す
   def self.digest(string)
@@ -33,12 +56,12 @@ class User < ApplicationRecord
   # 永続セッションのためにユーザーをデータベースに記憶する
   def remember
     self.remember_token = User.new_token
-    update_attribute(:remember_digest, User.digest(remember_token))
+    update(remember_digest: User.digest(remember_token))
   end
 
   # ユーザーのログイン情報を破棄する
   def forget
-    update_attribute(:remember_digest, nil)
+    update(remember_digest: nil)
   end
 
   # トークンがダイジェストと一致したらtrueを返す
@@ -50,8 +73,8 @@ class User < ApplicationRecord
   end
 
   # アカウントを有効にする
-  def activate
-    update_attribute(activated: true, activated_at: Time.zone.now)
+  def activate!
+    update(activated: true, activated_at: Time.zone.now)
   end
 
   # 有効化用のメールを送信する
