@@ -21,7 +21,7 @@ class PasswordResetsController < ApplicationController
 
   private
 
-  #getやset
+  # getやsetから始まるメソッド名は避けた方がよい→ここはチュートリアルに合わせてそのままにしておく
   # rubocop:disable Naming/AccessorMethodName
   def get_user
     @user = User.find_by(email: params[:email])
