@@ -70,6 +70,12 @@ RSpec.describe 'PasswordResets', type: :request do
       get edit_password_reset_path('wrong token', email: @user.email)
       expect(response).to redirect_to root_path
     end
+
+    it '2時間以上経過していれば、newにリダイレクトされること' do
+      @user.update_attribute(:reset_sent_at, 3.hours.ago)
+      get edit_password_reset_path(@user.reset_token, email: @user.email)
+      expect(response).to redirect_to new_password_reset_path
+    end
   end
 
   describe '#update' do
@@ -113,6 +119,27 @@ RSpec.describe 'PasswordResets', type: :request do
                                                               user: { password: '',
                                                                       password_confirmation: '' } }
       expect(response.body).to include '<div id="error_explanation">'
+    end
+
+    context '2時間以上経過している場合' do
+      before do
+        @user.update_attribute(:reset_sent_at, 3.hours.ago)
+      end
+
+      it 'newにリダイレクトされること' do
+        patch password_reset_path(@user.reset_token), params: { email: @user.email,
+                                                                user: { password: 'foobaz',
+                                                                        password_confirmation: 'foobaz' } }
+        expect(response).to redirect_to new_password_reset_path
+      end
+
+      it '"Password reset has expired."が表示されること' do
+        patch password_reset_path(@user.reset_token), params: { email: @user.email,
+                                                                user: { password: 'foobaz',
+                                                                        password_confirmation: 'foobaz' } }
+        follow_redirect!
+        expect(response.body).to include 'Password reset has expired.'
+      end
     end
   end
 end
