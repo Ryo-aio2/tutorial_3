@@ -43,4 +43,9 @@ RSpec.describe Micropost, type: :model do
       expect(micropost).to_not be_valid
     end
   end
+
+  it '並び順は投稿の新しい順になっていること' do
+    FactoryBot.send(:user_with_posts)
+    expect(FactoryBot.create(:most_recent)).to eq Micropost.first
+  end
 end
