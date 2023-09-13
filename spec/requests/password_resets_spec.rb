@@ -89,7 +89,7 @@ RSpec.describe 'PasswordResets', type: :request do
         patch password_reset_path(@user.reset_token), params: { email: @user.email,
                                                                 user: { password: 'foobaz',
                                                                         password_confirmation: 'foobaz' } }
-        expect(logged_in?).to be_truthy
+        expect(logged_in?).to be (true)
       end
 
       it 'flashが存在すること' do
