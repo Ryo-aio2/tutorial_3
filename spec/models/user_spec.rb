@@ -11,6 +11,8 @@
 #  name              :string           not null
 #  password_digest   :string           not null
 #  remember_digest   :string
+#  reset_digest      :string
+#  reset_sent_at     :datetime
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
