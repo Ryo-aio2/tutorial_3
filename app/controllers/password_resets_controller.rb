@@ -1,5 +1,5 @@
 class PasswordResetsController < ApplicationController
-  before_action :get_user,   except: %i[new create]
+  before_action :get_user,   only: %i[edit update]
   before_action :valid_user, except: %i[new create]
   before_action :check_expiration, except: %i[new create]
 
