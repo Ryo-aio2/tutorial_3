@@ -21,7 +21,7 @@ require 'rails_helper'
 
 RSpec.describe Micropost, type: :model do
   let(:user) { FactoryBot.create(:user) }
-  let(:micropost) { Micropost.new(content: 'Lorem ipsum', user_id: user.id) }
+  let(:micropost) { FactoryBot.create(:micropost) }
 
   it '有効であること' do
     expect(micropost).to be_valid
@@ -52,8 +52,8 @@ RSpec.describe Micropost, type: :model do
   it '投稿したユーザが削除された場合、そのユーザのMicropostも削除されること' do
     post = FactoryBot.create(:most_recent)
     user = post.user
-    expect {
+    expect do
       user.destroy
-    }.to change(Micropost, :count).by -1
+    end.to change(Micropost, :count).by(-1)
   end
 end
