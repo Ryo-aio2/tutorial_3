@@ -49,11 +49,11 @@ RSpec.describe Micropost, type: :model do
     expect(FactoryBot.create(:most_recent)).to eq Micropost.first
   end
 
-  # it '投稿したユーザが削除された場合、そのユーザのMicropostも削除されること' do
-  #   post = FactoryBot.create(:most_recent)
-  #   user = post.user
-  #   expect {
-  #     user.destroy
-  #   }.to change(Micropost, :count).by -1
-  # end
+  it '投稿したユーザが削除された場合、そのユーザのMicropostも削除されること' do
+    post = FactoryBot.create(:most_recent)
+    user = post.user
+    expect {
+      user.destroy
+    }.to change(Micropost, :count).by -1
+  end
 end
