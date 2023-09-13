@@ -24,10 +24,10 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   let(:user) do
-    User.new(name: 'Example User',
-             email: 'user@example.com',
-             password: 'foobar',
-             password_confirmation: 'foobar')
+    described_class.new(name: 'Example User',
+                        email: 'user@example.com',
+                        password: 'foobar',
+                        password_confirmation: 'foobar')
   end
 
   it 'userが有効であること' do
@@ -36,22 +36,22 @@ RSpec.describe User, type: :model do
 
   it 'nameが必須であること' do
     user.name = ''
-    expect(user).to_not be_valid
+    expect(user).not_to be_valid
   end
 
   it 'nameは50文字以内であること' do
     user.name = 'a' * 51
-    expect(user).to_not be_valid
+    expect(user).not_to be_valid
   end
 
   it 'emailが必須であること' do
     user.email = ''
-    expect(user).to_not be_valid
+    expect(user).not_to be_valid
   end
 
   it 'emailは255文字以内であること' do
     user.email = "#{'a' * 244}@example.com"
-    expect(user).to_not be_valid
+    expect(user).not_to be_valid
   end
 
   it 'emailが有効な形式であること' do
@@ -66,7 +66,7 @@ RSpec.describe User, type: :model do
     invalid_addresses = %w[user@example,com user_at_foo.org user.name@example. foo@bar_baz.com foo@bar+baz.com]
     invalid_addresses.each do |invalid_address|
       user.email = invalid_address
-      expect(user).to_not be_valid
+      expect(user).not_to be_valid
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe User, type: :model do
     duplicate_user = user.dup
     duplicate_user.email = user.email.upcase
     user.save
-    expect(duplicate_user).to_not be_valid
+    expect(duplicate_user).not_to be_valid
   end
 
   it 'emailは小文字でDB登録されていること' do
@@ -86,12 +86,12 @@ RSpec.describe User, type: :model do
 
   it 'passwordが必須であること' do
     user.password = user.password_confirmation = ' ' * 6
-    expect(user).to_not be_valid
+    expect(user).not_to be_valid
   end
 
   it 'passwordは6文字以上であること' do
     user.password = user.password_confirmation = 'a' * 5
-    expect(user).to_not be_valid
+    expect(user).not_to be_valid
   end
 
   describe '#authenticated?' do

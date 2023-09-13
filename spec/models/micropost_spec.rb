@@ -29,24 +29,24 @@ RSpec.describe Micropost, type: :model do
 
   it 'user_idがない場合は、無効であること' do
     micropost.user_id = nil
-    expect(micropost).to_not be_valid
+    expect(micropost).not_to be_valid
   end
 
   describe 'content' do
     it '空なら無効であること' do
       micropost.content = '    '
-      expect(micropost).to_not be_valid
+      expect(micropost).not_to be_valid
     end
 
     it '141文字以上なら無効であること' do
       micropost.content = 'a' * 141
-      expect(micropost).to_not be_valid
+      expect(micropost).not_to be_valid
     end
   end
 
   it '並び順は投稿の新しい順になっていること' do
     FactoryBot.send(:user_with_posts)
-    expect(FactoryBot.create(:most_recent)).to eq Micropost.first
+    expect(FactoryBot.create(:most_recent)).to eq described_class.first
   end
 
   it '投稿したユーザが削除された場合、そのユーザのMicropostも削除されること' do
@@ -54,6 +54,6 @@ RSpec.describe Micropost, type: :model do
     user = post.user
     expect do
       user.destroy
-    end.to change(Micropost, :count).by(-1)
+    end.to change(described_class, :count).by(-1)
   end
 end

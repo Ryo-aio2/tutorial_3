@@ -19,12 +19,12 @@ module SessionsHelper
   # 現在ログイン中のユーザーを返す
   def current_user
     if session[:user_id]
-      @current_user ||= User.find_by(id: session[:user_id])
+      User.find_by(id: session[:user_id])
     elsif cookies.signed[:user_id]
       user = User.find_by(id: session[:user_id])
       if user&.authenticated?(:remember, cookies[:remember_token])
         log_in user
-        @current_user = user
+        user
       end
     end
   end
@@ -45,7 +45,7 @@ module SessionsHelper
   def log_out
     forget(current_user)
     session.delete(:user_id)
-    @current_user = nil
+    nil
   end
 
   # 記憶したURL (もしくはデフォルト値) にリダイレクト

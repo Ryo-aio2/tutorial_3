@@ -1,5 +1,9 @@
 inherit_from: .rubocop_todo.yml
 
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
 AllCops:
   Exclude:
     - db/migrate/*
@@ -35,3 +39,15 @@ ParenthesesAroundCondition:
 
 AssignmentInCondition:
   AllowSafeAssignment: false
+
+ExampleLength:
+  Enabled: false
+
+MultipleExpectations:
+  Enabled: false
+
+ContextWording:
+  Enabled: false
+
+InstanceVariable:
+  Enabled: false

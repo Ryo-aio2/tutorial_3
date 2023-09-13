@@ -18,12 +18,12 @@
 #  fk_rails_...  (user_id => users.id)
 #
 FactoryBot.define do
-  factory :orange, class: Micropost do
+  factory :orange, class: 'Micropost' do
     content { 'I just ate an orange!' }
     created_at { 10.minutes.ago }
   end
 
-  factory :most_recent, class: Micropost do
+  factory :most_recent, class: 'Micropost' do
     content { 'Writing a short test' }
     created_at { Time.zone.now }
     user { association :user, email: 'recent@example.com' }

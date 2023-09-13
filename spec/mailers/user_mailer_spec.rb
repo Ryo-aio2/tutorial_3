@@ -4,7 +4,7 @@ RSpec.describe UserMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user) }
 
   describe 'account_activation' do
-    let(:mail) { UserMailer.account_activation(user) }
+    let(:mail) { described_class.account_activation(user) }
 
     before do
       user.activation_token = User.new_token
@@ -36,7 +36,8 @@ RSpec.describe UserMailer, type: :mailer do
   end
 
   describe 'password_reset' do
-    let(:mail) { UserMailer.password_reset(user) }
+    let(:mail) { described_class.password_reset(user) }
+
     before do
       user.reset_token = User.new_token
     end
