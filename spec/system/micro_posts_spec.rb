@@ -32,5 +32,11 @@ RSpec.describe 'MicroPosts', type: :system do
         expect(page).to have_content micropost.content
       end
     end
+
+    it 'ページネーションの表示が一箇所のみであること' do
+      visit user_path @user
+      pagination = find_all('div.pagination')
+      expect(pagination.size).to eq 1
+    end
   end
 end
