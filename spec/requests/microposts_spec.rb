@@ -20,6 +20,23 @@ RSpec.describe 'Microposts', type: :request do
     let(:user) { FactoryBot.create(:user) }
     let!(:micropost) { FactoryBot.create(:micropost) }
 
+    context '他のユーザーの投稿を削除した場合' do
+      before do
+        log_in user
+      end
+
+      it '削除されないこと' do
+        expect do
+          delete micropost_path(micropost)
+        end.not_to change(Micropost, :count)
+      end
+
+      it 'ログインページにリダイレクトされること' do
+        delete micropost_path(micropost)
+        expect(response).to redirect_to root_url
+      end
+    end
+
     context '未ログインの場合' do
       it '/loginにリダイレクトすること' do
         delete micropost_path(micropost)
