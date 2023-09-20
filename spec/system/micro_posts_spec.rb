@@ -49,6 +49,17 @@ RSpec.describe 'MicroPosts', type: :system do
       visit root_path
     end
 
+    it '画像添付ができること' do
+      expect do
+        fill_in 'micropost_content', with: 'hello'
+        attach_file 'micropost[picture]', Rails.root.join('spec/factories/kitten.jpg').to_s
+        click_button 'Post'
+      end.to change(Micropost, :count).by 1
+
+      attached_post = Micropost.first
+      expect(attached_post.picture).to_not be(false)
+    end
+
     it 'ページネーションのラッパータグがあること' do
       expect(page).to have_selector 'div.pagination'
     end
