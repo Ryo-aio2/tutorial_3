@@ -21,7 +21,7 @@
 #  index_users_on_email  (email) UNIQUE
 #
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: %i[followed follower] do
     sequence(:name) { |n| "Example User #{n}" }
     sequence(:email) { |n| "example-#{n}@gmail.com" }
     password { 'password' }

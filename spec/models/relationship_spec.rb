@@ -17,5 +17,19 @@
 require 'rails_helper'
 
 RSpec.describe Relationship, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'validationテスト' do
+    let(:relationship) { FactoryBot.create(:relationship) }
+
+    context '無効な属性を持つ場合' do
+      it 'follower_idがないと無効になること' do
+        relationship.follower_id = nil
+        expect(relationship).not_to be_valid
+      end
+
+      it 'followed_idがないと無効になること' do
+        relationship.followed_id = nil
+        expect(relationship).not_to be_valid
+      end
+    end
+  end
 end
