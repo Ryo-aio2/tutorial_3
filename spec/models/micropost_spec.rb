@@ -25,7 +25,11 @@ RSpec.describe Micropost, type: :model do
   let(:micropost) { FactoryBot.create(:micropost) }
 
   it '有効であること' do
-    expect(micropost).to be_valid
+    mp = Micropost.new
+    mp.user = user
+    mp.content = 'content'
+    mp.save
+    expect(mp).to be_valid
   end
 
   it 'user_idがない場合は、無効であること' do
