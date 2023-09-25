@@ -57,7 +57,7 @@ RSpec.describe 'MicroPosts', type: :system do
       end.to change(Micropost, :count).by 1
 
       attached_post = Micropost.first
-      expect(attached_post.picture).to_not be(false)
+      expect(attached_post.picture).not_to be(false)
     end
 
     it 'ページネーションのラッパータグがあること' do
