@@ -25,7 +25,7 @@ RSpec.describe Micropost, type: :model do
   let(:micropost) { FactoryBot.create(:micropost) }
 
   it '有効であること' do
-    mp = Micropost.new
+    mp = described_class.new
     mp.user = user
     mp.content = 'content'
     mp.save
