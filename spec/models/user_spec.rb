@@ -99,4 +99,22 @@ RSpec.describe User, type: :model do
       expect(user.authenticated?(:remember, '')).to be(false)
     end
   end
+
+  describe '#follow and #unfollow' do
+    let(:user) { FactoryBot.create(:user) }
+    let(:other) { FactoryBot.create(:user, :other_user) }
+
+    it 'followするとfollowing?がtrueになること' do
+      expect(user.following?(other)).not_to be(true)
+      user.follow(other)
+      expect(user.following?(other)).to be(true)
+    end
+
+    it 'unfollowするとfollowing?がfalseになること' do
+      user.follow(other)
+      expect(user.following?(other)).not_to be(false)
+      user.unfollow(other)
+      expect(user.following?(other)).to be(false)
+    end
+  end
 end
