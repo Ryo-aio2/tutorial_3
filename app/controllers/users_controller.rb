@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :logged_in_user, except: %i[show new create]
-  before_action :correct_user,   except: %i[index show new create destroy]
-  before_action :admin_user,     except: %i[index show new create edit update]
+  before_action :correct_user,   except: %i[index show new create destroy following followers]
+  before_action :admin_user,     except: %i[index show new create edit update following followers]
 
   def index
     @users = User.activated.paginate(page: params[:page])
