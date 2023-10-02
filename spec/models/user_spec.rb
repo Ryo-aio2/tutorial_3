@@ -116,5 +116,12 @@ RSpec.describe User, type: :model do
       user.unfollow(other)
       expect(user.following?(other)).to be(false)
     end
+
+    it 'followするとfollowing?がtrueになること' do
+      expect(user).not_to be_following(other)
+      user.follow(other)
+      expect(other.followers).to include(user)
+      expect(user).to be_following(other)
+    end
   end
 end
