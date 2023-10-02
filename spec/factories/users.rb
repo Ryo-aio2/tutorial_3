@@ -48,6 +48,10 @@ FactoryBot.define do
         end
       end
     end
+
+    trait :with_posts do
+      after(:create) { |user| create_list(:micropost, 31, user: user) }
+    end
   end
 
   factory :continuous_users, class: 'User' do

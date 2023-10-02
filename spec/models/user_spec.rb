@@ -124,4 +124,32 @@ RSpec.describe User, type: :model do
       expect(user).to be_following(other)
     end
   end
+
+  describe '#feed' do
+    let(:user) { FactoryBot.create(:user, :with_posts) }
+    let(:user_following) { FactoryBot.create(:user, :with_posts) }
+    let(:user_unfollowed) { FactoryBot.create(:user, :with_posts) }
+
+    before do
+      user.follow(user_following)
+    end
+
+    it "displays user's own posts" do
+      user.microposts.each do |post_self|
+        expect(user.feed).to be_include(post_self)
+      end
+    end
+
+    it "displays following user's posts" do
+      user_following.microposts.each do |post_following|
+        expect(user.feed).to be_include(post_following)
+      end
+    end
+
+    it "doesn't display unfollowed user's posts" do
+      user_unfollowed.microposts.each do |post_unfollowed|
+        expect(user.feed).not_to be_include(post_unfollowed)
+      end
+    end
+  end
 end
