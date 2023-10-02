@@ -19,4 +19,16 @@ FactoryBot.define do
     association :followed
     association :follower
   end
+
+  def create_relationships
+    FactoryBot.create_list(:continuous_users, 10)
+
+    FactoryBot.create(:user) do |user|
+      User.all[0...-1].each do |other|
+        FactoryBot.create(:follower, follower_id: other.id, followed_id: user.id)
+        FactoryBot.create(:following, follower_id: user.id, followed_id: other.id)
+      end
+      user
+    end
+  end
 end

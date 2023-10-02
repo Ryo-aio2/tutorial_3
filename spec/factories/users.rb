@@ -38,6 +38,16 @@ FactoryBot.define do
       name { 'Sterling Archer' }
       email { 'duchess@example.gov' }
     end
+
+    trait :with_relationships do
+      after(:create) do |user|
+        30.times do
+          other_user = create(:user)
+          user.follow(other_user)
+          other_user.follow(user)
+        end
+      end
+    end
   end
 
   factory :continuous_users, class: 'User' do

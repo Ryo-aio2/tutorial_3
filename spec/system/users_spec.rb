@@ -36,5 +36,17 @@ RSpec.describe 'Users', type: :system do
 
       expect(page).not_to have_link 'delete'
     end
+
+    describe 'following and followers' do
+      let(:user_with_relationships) { FactoryBot.create(:user, :with_relationships) }
+      let(:following) { user_with_relationships.following.count }
+      let(:followers) { user_with_relationships.followers.count }
+
+      it 'followingとfollowersが正しく表示されること' do
+        log_in user_with_relationships
+        expect(page).to have_content("#{following} following")
+        expect(page).to have_content("#{followers} followers")
+      end
+    end
   end
 end
