@@ -34,7 +34,7 @@ RSpec.describe 'Users', type: :system do
       log_in not_admin
       visit users_path
 
-      expect(page).to_not have_link 'delete'
+      expect(page).not_to have_link 'delete'
     end
   end
 end

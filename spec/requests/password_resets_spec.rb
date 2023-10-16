@@ -17,13 +17,13 @@ RSpec.describe 'PasswordResets', type: :request do
   describe '#create' do
     it '無効なメールアドレスならflashが存在すること' do
       post password_resets_path, params: { password_reset: { email: '' } }
-      expect(flash).to_not be_empty
+      expect(flash).not_to be_empty
     end
 
     context '有効なメールアドレスの場合' do
       it 'reset_digestが変わっていること' do
         post password_resets_path, params: { password_reset: { email: user.email } }
-        expect(user.reset_digest).to_not eq user.reload.reset_digest
+        expect(user.reset_digest).not_to eq user.reload.reset_digest
       end
 
       it '送信メールが1件増えること' do
@@ -34,7 +34,7 @@ RSpec.describe 'PasswordResets', type: :request do
 
       it 'flashが存在すること' do
         post password_resets_path, params: { password_reset: { email: user.email } }
-        expect(flash).to_not be_empty
+        expect(flash).not_to be_empty
       end
 
       it 'rootにリダイレクトされること' do
@@ -61,7 +61,7 @@ RSpec.describe 'PasswordResets', type: :request do
     end
 
     it '無効なユーザならrootにリダイレクトすること' do
-      @user.toggle!(:activated)
+      @user.update(activated: false)
       get edit_password_reset_path(@user.reset_token, email: @user.email)
       expect(response).to redirect_to root_path
     end
@@ -72,7 +72,7 @@ RSpec.describe 'PasswordResets', type: :request do
     end
 
     it '2時間以上経過していれば、newにリダイレクトされること' do
-      @user.update_attribute(:reset_sent_at, 3.hours.ago)
+      @user.update(reset_sent_at: 3.hours.ago)
       get edit_password_reset_path(@user.reset_token, email: @user.email)
       expect(response).to redirect_to new_password_reset_path
     end
@@ -89,14 +89,14 @@ RSpec.describe 'PasswordResets', type: :request do
         patch password_reset_path(@user.reset_token), params: { email: @user.email,
                                                                 user: { password: 'foobaz',
                                                                         password_confirmation: 'foobaz' } }
-        expect(logged_in?).to be (true)
+        expect(logged_in?).to be(true)
       end
 
       it 'flashが存在すること' do
         patch password_reset_path(@user.reset_token), params: { email: @user.email,
                                                                 user: { password: 'foobaz',
                                                                         password_confirmation: 'foobaz' } }
-        expect(flash).to_not be_empty
+        expect(flash).not_to be_empty
       end
 
       it 'ユーザの詳細ページにリダイレクトすること' do
@@ -131,7 +131,7 @@ RSpec.describe 'PasswordResets', type: :request do
 
     context '2時間以上経過している場合' do
       before do
-        @user.update_attribute(:reset_sent_at, 3.hours.ago)
+        @user.update(reset_sent_at: 3.hours.ago)
       end
 
       it 'newにリダイレクトされること' do

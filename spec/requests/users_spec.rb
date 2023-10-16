@@ -24,7 +24,7 @@ RSpec.describe 'Users', type: :request do
       not_activated_user = FactoryBot.create(:user, name: 'aaaaaa', email: 'test2@t.t', activated: false)
       log_in user
       get users_path
-      expect(response.body).to_not include not_activated_user.name
+      expect(response.body).not_to include not_activated_user.name
     end
   end
 
@@ -33,9 +33,7 @@ RSpec.describe 'Users', type: :request do
 
     describe 'pagination' do
       before do
-        30.times do
-          FactoryBot.create(:continuous_users)
-        end
+        FactoryBot.create_list(:continuous_users, 30)
         log_in user
         get users_path
       end
@@ -83,7 +81,7 @@ RSpec.describe 'Users', type: :request do
 
       it '登録時点ではactivateされていないこと' do
         post users_path, params: user_params
-        expect(User.last).to_not be_activated
+        expect(User.last).not_to be_activated
       end
     end
 
@@ -94,7 +92,7 @@ RSpec.describe 'Users', type: :request do
                                              email: 'user@invlid',
                                              password: 'foo',
                                              password_confimation: 'bar' } }
-        end.to_not change(User, :count)
+        end.not_to change(User, :count)
       end
     end
   end
@@ -122,7 +120,7 @@ RSpec.describe 'Users', type: :request do
     context '未ログインの場合' do
       it 'flashが空でないこと' do
         get edit_user_path(user)
-        expect(flash).to_not be_empty
+        expect(flash).not_to be_empty
       end
 
       it '未ログインユーザはログインページにリダイレクトされること' do
@@ -171,13 +169,13 @@ RSpec.describe 'Users', type: :request do
     it 'admin属性は更新できないこと' do
       # userはこの後adminユーザになるので違うユーザにしておく
       log_in user = FactoryBot.create(:user, name: 'Sterling Archer', email: 'duchess@example.gov')
-      expect(user).to_not be_admin
+      expect(user).not_to be_admin
 
       patch user_path(user), params: { user: { password: 'password',
                                                password_confirmation: 'password',
                                                admin: true } }
       user.reload
-      expect(user).to_not be_admin
+      expect(user).not_to be_admin
     end
 
     it 'タイトルがEdit user | Ruby on Rails Tutorial Sample Appであること' do
@@ -223,10 +221,10 @@ RSpec.describe 'Users', type: :request do
 
       it '更新できないこと' do
         user.reload
-        expect(user.name).to_not eq ''
-        expect(user.email).to_not eq ''
-        expect(user.password).to_not eq 'foo'
-        expect(user.password_confirmation).to_not eq 'bar'
+        expect(user.name).not_to eq ''
+        expect(user.email).not_to eq ''
+        expect(user.password).not_to eq 'foo'
+        expect(user.password_confirmation).not_to eq 'bar'
       end
 
       it '更新アクション後にeditのページが表示されていること' do
@@ -242,7 +240,7 @@ RSpec.describe 'Users', type: :request do
       it 'flashが空でないこと' do
         patch user_path(user), params: { user: { name: user.name,
                                                  email: user.email } }
-        expect(flash).to_not be_empty
+        expect(flash).not_to be_empty
       end
 
       it '未ログインユーザはログインページにリダイレクトされること' do
@@ -279,7 +277,7 @@ RSpec.describe 'Users', type: :request do
       it '削除できないこと' do
         expect do
           delete user_path(user)
-        end.to_not change(User, :count)
+        end.not_to change(User, :count)
       end
 
       it 'ログインページにリダイレクトすること' do
@@ -293,7 +291,7 @@ RSpec.describe 'Users', type: :request do
         log_in other_user
         expect do
           delete user_path(user)
-        end.to_not change(User, :count)
+        end.not_to change(User, :count)
       end
 
       it 'rootにリダイレクトすること' do

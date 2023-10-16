@@ -22,8 +22,8 @@
 #
 FactoryBot.define do
   factory :user do
-    name { 'Michael Example' }
-    email { 'michael@example.com' }
+    sequence(:name) { |n| "Example User #{n}" }
+    sequence(:email) { |n| "example-#{n}@gmail.com" }
     password { 'password' }
     password_confirmation { 'password' }
     admin { false }
@@ -40,7 +40,7 @@ FactoryBot.define do
     end
   end
 
-  factory :continuous_users, class: User do
+  factory :continuous_users, class: 'User' do
     sequence(:name) { |n| "User #{n}" }
     sequence(:email) { |n| "user-#{n}@example.com" }
     password { 'password' }
