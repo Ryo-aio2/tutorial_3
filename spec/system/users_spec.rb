@@ -36,5 +36,65 @@ RSpec.describe 'Users', type: :system do
 
       expect(page).not_to have_link 'delete'
     end
+
+    describe 'following and followers' do
+      let(:user_with_relationships) { FactoryBot.create(:user, :with_relationships) }
+      let(:following) { user_with_relationships.following.count }
+      let(:followers) { user_with_relationships.followers.count }
+
+      it 'followingとfollowersが正しく表示されること' do
+        log_in user_with_relationships
+        expect(page).to have_content("#{following} following")
+        expect(page).to have_content("#{followers} followers")
+      end
+    end
+  end
+
+  describe 'GET /users/id/following' do
+    let(:user) { FactoryBot.create(:user) }
+
+    context 'ログイン状態の場合' do
+      before do
+        @user_with_relationships = FactoryBot.create(:user, :with_relationships)
+        @following = @user_with_relationships.following
+        log_in @user_with_relationships
+      end
+
+      it 'followingの数とフォローしているユーザへのリンクが表示されていること' do
+        visit following_user_path(@user_with_relationships)
+
+        # ここが空の場合後のテストが実行されないため
+        expect(@following).not_to be_empty
+
+        expect(page).to have_content("#{@following.count} following")
+        @following.paginate(page: 1).each do |follow|
+          expect(page).to have_link follow.name, href: user_path(follow)
+        end
+      end
+    end
+  end
+
+  describe 'GET /users/id/followers' do
+    let(:user) { FactoryBot.create(:user) }
+
+    context 'ログイン状態の場合' do
+      before do
+        @user_with_relationships = FactoryBot.create(:user, :with_relationships)
+        @followers = @user_with_relationships.followers
+        log_in @user_with_relationships
+      end
+
+      it 'followersの数とフォローしているユーザへのリンクが表示されていること' do
+        visit followers_user_path(@user_with_relationships)
+
+        # ここが空の場合後のテストが実行されないため
+        expect(@followers).not_to be_empty
+
+        expect(page).to have_content("#{@followers.count} followers")
+        @followers.paginate(page: 1).each do |follower|
+          expect(page).to have_link follower.name, href: user_path(follower)
+        end
+      end
+    end
   end
 end

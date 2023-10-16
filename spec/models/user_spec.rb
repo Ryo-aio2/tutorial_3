@@ -99,4 +99,57 @@ RSpec.describe User, type: :model do
       expect(user.authenticated?(:remember, '')).to be(false)
     end
   end
+
+  describe '#follow and #unfollow' do
+    let(:user) { FactoryBot.create(:user) }
+    let(:other) { FactoryBot.create(:user, :other_user) }
+
+    it 'followするとfollowing?がtrueになること' do
+      expect(user.following?(other)).not_to be(true)
+      user.follow(other)
+      expect(user.following?(other)).to be(true)
+    end
+
+    it 'unfollowするとfollowing?がfalseになること' do
+      user.follow(other)
+      expect(user.following?(other)).not_to be(false)
+      user.unfollow(other)
+      expect(user.following?(other)).to be(false)
+    end
+
+    it 'followできること' do
+      expect(user).not_to be_following(other)
+      user.follow(other)
+      expect(other.followers).to include(user)
+      expect(user).to be_following(other)
+    end
+  end
+
+  describe '#feed' do
+    let(:user) { FactoryBot.create(:user, :with_posts) }
+    let(:user_following) { FactoryBot.create(:user, :with_posts) }
+    let(:user_unfollowed) { FactoryBot.create(:user, :with_posts) }
+
+    before do
+      user.follow(user_following)
+    end
+
+    it "displays user's own posts" do
+      user.microposts.each do |post_self|
+        expect(user.feed).to be_include(post_self)
+      end
+    end
+
+    it "displays following user's posts" do
+      user_following.microposts.each do |post_following|
+        expect(user.feed).to be_include(post_following)
+      end
+    end
+
+    it "doesn't display unfollowed user's posts" do
+      user_unfollowed.microposts.each do |post_unfollowed|
+        expect(user.feed).not_to be_include(post_unfollowed)
+      end
+    end
+  end
 end

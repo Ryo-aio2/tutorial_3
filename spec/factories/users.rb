@@ -21,7 +21,7 @@
 #  index_users_on_email  (email) UNIQUE
 #
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: %i[followed follower] do
     sequence(:name) { |n| "Example User #{n}" }
     sequence(:email) { |n| "example-#{n}@gmail.com" }
     password { 'password' }
@@ -37,6 +37,20 @@ FactoryBot.define do
     trait :other_user do
       name { 'Sterling Archer' }
       email { 'duchess@example.gov' }
+    end
+
+    trait :with_relationships do
+      after(:create) do |user|
+        30.times do
+          other_user = create(:user)
+          user.follow(other_user)
+          other_user.follow(user)
+        end
+      end
+    end
+
+    trait :with_posts do
+      after(:create) { |user| create_list(:micropost, 31, user: user) }
     end
   end
 
