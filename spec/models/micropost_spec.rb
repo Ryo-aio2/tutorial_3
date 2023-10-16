@@ -21,14 +21,12 @@
 require 'rails_helper'
 
 RSpec.describe Micropost, type: :model do
-  let(:user) { FactoryBot.create(:user) }
   let(:micropost) { FactoryBot.create(:micropost) }
 
   it '有効であること' do
     mp = described_class.new
-    mp.user = user
+    mp.user = User.first
     mp.content = 'content'
-    mp.save
     expect(mp).to be_valid
   end
 
@@ -50,7 +48,9 @@ RSpec.describe Micropost, type: :model do
   end
 
   it '並び順は投稿の新しい順になっていること' do
-    FactoryBot.send(:user_with_posts)
+    FactoryBot.create(:user) do |user|
+      FactoryBot.create_list(:orange, 5, user: user)
+    end
     expect(FactoryBot.create(:most_recent)).to eq described_class.first
   end
 

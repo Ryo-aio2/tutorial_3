@@ -55,9 +55,3 @@ FactoryBot.define do
     end
   end
 end
-
-def user_with_posts(posts_count: 5)
-  FactoryBot.create(:user) do |user|
-    FactoryBot.create_list(:orange, posts_count, user: user)
-  end
-end
