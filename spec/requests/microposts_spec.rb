@@ -16,7 +16,7 @@ RSpec.describe 'Microposts', type: :request do
     end
   end
 
-  describe 'DELETE /microposts/id' do
+  describe 'DELETE /microposts:id' do
     let(:user) { FactoryBot.create(:user) }
     let!(:micropost) { FactoryBot.create(:micropost) }
 

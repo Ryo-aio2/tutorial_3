@@ -7,7 +7,9 @@ RSpec.describe 'MicroPosts', type: :system do
 
   describe 'Users#show' do
     before do
-      FactoryBot.send(:user_with_posts, posts_count: 35)
+      FactoryBot.create(:user) do |user|
+        FactoryBot.create_list(:orange, 35, user: user)
+      end
       @user = Micropost.first.user
     end
 
@@ -42,7 +44,9 @@ RSpec.describe 'MicroPosts', type: :system do
 
   describe 'home' do
     before do
-      FactoryBot.send(:user_with_posts, posts_count: 35)
+      FactoryBot.create(:user) do |user|
+        FactoryBot.create_list(:orange, 35, user: user)
+      end
       @user = Micropost.first.user
       @user.password = 'password'
       log_in @user
